@@ -1,16 +1,17 @@
 name: Deploy Gulf Energy Jobs to GitHub Pages
 
-# This workflow self-enables GitHub Pages (actions/configure-pages with
-# enablement: true), builds the static site, and deploys it — no manual
-# Settings -> Pages toggle required. It runs on every push to main and can
-# also be triggered manually from the Actions tab.
+# OPTIONAL — only if your account has GitHub Actions hosted runners available.
 #
-# Note: GitHub Pages on a PRIVATE repo requires a paid plan (Pro/Team/...).
-# On the free plan, make the repository public (Settings -> General) for Pages
-# to publish.
+# The simplest way to launch this site needs NO Actions runner: the built HTML
+# is committed at the repo root, so use branch-based Pages instead —
+#   Settings -> Pages -> Build and deployment -> Source: "Deploy from a branch"
+#   -> Branch: main, Folder: / (root) -> Save.
+# The site then serves at https://<user>.github.io/<repo>/ within ~1 minute.
+#
+# This workflow is an alternative (Actions-based) deploy. It is manual-dispatch
+# only so it never spawns queued/cancelled runs on push. Run it from the
+# Actions tab if and when hosted runners are available to your account.
 on:
-  push:
-    branches: ["main"]
   workflow_dispatch:
 
 permissions:

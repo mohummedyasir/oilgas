@@ -45,14 +45,25 @@ Everything is generated into the repository root (`index.html`, `jobs.html`, `jo
 
 ## 🌐 Deploy / Launch
 
-This repo ships with a **GitHub Pages** workflow (`.github/workflows/deploy.yml`).
+The built HTML is committed at the repo root, so the fastest, most reliable launch
+**needs no build server or Actions runner** — GitHub Pages serves the branch directly.
 
-1. Push to GitHub.
-2. In the repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-3. (Optional) **Settings → Secrets and variables → Actions → Variables** → add a `SITE_URL`
-   variable (e.g. `https://www.gulfenergyjobs.com` or your Pages URL). This is used for
-   canonical tags, the sitemap and structured data.
-4. Every push to the deploy branch publishes the site automatically.
+### Recommended: branch-based GitHub Pages (one setting, no runner)
+
+1. Make sure the repo is **public** (Settings → General) — required for free Pages.
+2. **Settings → Pages → Build and deployment → Source: "Deploy from a branch"**
+   → Branch: **`main`**, Folder: **`/ (root)`** → **Save**.
+3. Wait ~1 minute. The site is live at **`https://<user>.github.io/<repo>/`**
+   (for this repo: `https://mohummedyasir.github.io/oilgas/`).
+
+A `.nojekyll` file is included so GitHub serves the static files as-is. To refresh
+the site after editing jobs, run `npm run build` and commit the regenerated HTML.
+
+### Alternative: GitHub Actions (only if hosted runners are available)
+
+The included `.github/workflows/deploy.yml` (manual dispatch) builds and deploys via
+Actions. Use it only if your account has hosted runners; otherwise prefer the
+branch-based method above.
 
 **Custom domain:** add a `CNAME` file containing your domain (e.g. `www.gulfenergyjobs.com`)
 and configure DNS with your registrar, or set it under Settings → Pages.
