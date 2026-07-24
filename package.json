@@ -1,0 +1,22 @@
+{
+  "name": "gulf-energy-jobs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gulf Energy Jobs — oil, gas & energy job board for the Gulf region. Powered by Business Umbrella.",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "start": "node scripts/build.js && npx --yes serve -l 3000 .",
+    "serve": "npx --yes serve -l 3000 ."
+  },
+  "keywords": [
+    "jobs",
+    "oil-and-gas",
+    "energy",
+    "gulf",
+    "gcc",
+    "job-board",
+    "renewable-energy"
+  ],
+  "author": "Business Umbrella",
+  "license": "UNLICENSED"
+}

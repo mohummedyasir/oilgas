@@ -1,0 +1,56 @@
+name: Deploy Gulf Energy Jobs to GitHub Pages
+
+# One-time setup before this can publish:
+#   1. Settings -> Pages -> Build and deployment -> Source: "GitHub Actions"
+#   2. Then run this workflow: Actions tab -> "Deploy Gulf Energy Jobs to
+#      GitHub Pages" -> "Run workflow".
+# Manual dispatch only, so the repo never shows a failing run before Pages is
+# enabled. To auto-deploy on every push once Pages is on, add back:
+#   push:
+#     branches: ["main"]
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build static site
+        # Set SITE_URL to your production domain (or the Pages URL) so that
+        # canonical tags, sitemap and structured data use absolute URLs.
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'https://www.gulfenergyjobs.com' }}
+        run: node scripts/build.js
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
