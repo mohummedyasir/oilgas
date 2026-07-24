@@ -1,14 +1,16 @@
 name: Deploy Gulf Energy Jobs to GitHub Pages
 
-# One-time setup before this can publish:
-#   1. Settings -> Pages -> Build and deployment -> Source: "GitHub Actions"
-#   2. Then run this workflow: Actions tab -> "Deploy Gulf Energy Jobs to
-#      GitHub Pages" -> "Run workflow".
-# Manual dispatch only, so the repo never shows a failing run before Pages is
-# enabled. To auto-deploy on every push once Pages is on, add back:
-#   push:
-#     branches: ["main"]
+# This workflow self-enables GitHub Pages (actions/configure-pages with
+# enablement: true), builds the static site, and deploys it — no manual
+# Settings -> Pages toggle required. It runs on every push to main and can
+# also be triggered manually from the Actions tab.
+#
+# Note: GitHub Pages on a PRIVATE repo requires a paid plan (Pro/Team/...).
+# On the free plan, make the repository public (Settings -> General) for Pages
+# to publish.
 on:
+  push:
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -32,11 +34,18 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Configure Pages (auto-enable)
+        id: pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - name: Build static site
-        # Set SITE_URL to your production domain (or the Pages URL) so that
-        # canonical tags, sitemap and structured data use absolute URLs.
+        # Use the resolved Pages URL as SITE_URL so canonical tags, the sitemap
+        # and JSON-LD structured data all use correct absolute URLs. Override by
+        # setting a repository "SITE_URL" Actions variable (e.g. a custom domain).
         env:
-          SITE_URL: ${{ vars.SITE_URL || 'https://www.gulfenergyjobs.com' }}
+          SITE_URL: ${{ vars.SITE_URL || steps.pages.outputs.base_url }}
         run: node scripts/build.js
 
       - name: Upload artifact
