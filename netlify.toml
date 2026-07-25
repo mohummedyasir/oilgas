@@ -1,0 +1,9 @@
+# Gulf Energy Jobs — Netlify config
+[build]
+  command = "node scripts/build.js"
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
